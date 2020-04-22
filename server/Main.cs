@@ -41,7 +41,7 @@ namespace FxMigrant
         }
 
         [EventHandler("onServerResourceStart")]
-        public async void OnServerResourceStart(string resourceName)
+        public void OnServerResourceStart(string resourceName)
         {
             m_migrationQueue.Enqueue(resourceName);
         }
@@ -79,10 +79,10 @@ namespace FxMigrant
                         migrationAssemblies.Add(migrationAssembly);
                     }
                 }
-                
+
                 var sc = new ServiceCollection()
                     .AddFluentMigratorCore()
-                    .AddScoped<IVersionLoader>(sp => 
+                    .AddScoped<IVersionLoader>(sp =>
                     {
                         var service = ActivatorUtilities.CreateInstance<FxVersionLoader>(sp, resourceName);
 
@@ -106,7 +106,7 @@ namespace FxMigrant
 
                     SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
-                    await Task.Factory.StartNew(async () => 
+                    await Task.Factory.StartNew(async () =>
                     {
                         bool success = false;
 
@@ -162,7 +162,7 @@ namespace FxMigrant
                 var migratorStream = File.OpenRead(GetResourcePath(GetCurrentResourceName()) + @"/server/bin/Release/netstandard2.0/publish/FluentMigrator.dll");
                 var migratorStreamTwo = File.OpenRead(GetResourcePath(GetCurrentResourceName()) + @"/server/bin/Release/netstandard2.0/publish/FluentMigrator.Abstractions.dll");
 
-                var buildTask = Task.Factory.StartNew(() => 
+                var buildTask = Task.Factory.StartNew(() =>
                 {
                     var parseOptions = new CSharpParseOptions();
                     var syntaxTree = CSharpSyntaxTree.ParseText(fileData, options: parseOptions);
